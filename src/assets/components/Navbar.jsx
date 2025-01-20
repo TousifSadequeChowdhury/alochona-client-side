@@ -8,7 +8,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="text-black shadow-md">
+    <nav className="bg-gray-700 text-black shadow-md ">
       <div className="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
         {/* Logo Section */}
   
@@ -17,7 +17,7 @@ const Navbar = () => {
 
         {/* Mobile Menu Toggle for smaller screens */}
         <button
-          className="md:hidden text-white"
+          className="md:hidden text-slate-400"
           onClick={toggleMobileMenu}
         >
           <div className="space-y-2">
@@ -38,7 +38,7 @@ const Navbar = () => {
 
       {/* Mobile Menu Links (Conditional Rendering) */}
       {isMobileMenuOpen && (
-        <div className="md:hidden bg-blue-600 p-4 space-y-4">
+        <div className="md:hidden bg-black-100 p-4 space-y-4">
           <ul className="space-y-4">
             <li><a href="/" className="text-white text-lg">Home</a></li>
             <li><a href="/about" className="text-white text-lg">About</a></li>
