@@ -5,6 +5,8 @@ import Footer from '../components/Footer';
 import MainLayout from '../Layout/MainLayout';
 import HomePage from '../pages/HomePage';
 import MembershipPage from '../pages/MembershipPage';
+import Login from '../pages/Login';
+import Registration from '../pages/Registration';
 
 const AppRoutes = () => {
     return (
@@ -13,6 +15,8 @@ const AppRoutes = () => {
                 <Route path="/" element={<MainLayout/>}>
                 <Route index element={<HomePage/>}/>
                 <Route path='/membership' element={<MembershipPage></MembershipPage>}/>
+                <Route path='/login' element={<Login></Login>}/>
+                <Route path='/register' element={<Registration></Registration>}/>
             </Route>
         </Routes>
   
