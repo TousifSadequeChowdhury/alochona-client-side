@@ -1,18 +1,18 @@
 import React from 'react';
 import Navbar from '../components/Navbar';
-import { Outlet } from 'react-router';
 import Footer from '../components/Footer';
+import { Outlet } from 'react-router';
 
 const MainLayout = () => {
-    return (
-        <div>
-            <Navbar></Navbar>
-            <main>
-              <Outlet></Outlet>
-            </main>
-            <Footer></Footer>
-        </div>
-    );
+  return (
+    <div>
+      <Navbar />
+      <main className="min-h-screen"> {/* Optional class for layout styling */}
+        <Outlet /> {/* Renders child routes */}
+      </main>
+      <Footer />
+    </div>
+  );
 };
 
 export default MainLayout;

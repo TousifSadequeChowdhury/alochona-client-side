@@ -2,6 +2,7 @@ import React from 'react';
 import BannerSection from '../components/BannerSection';
 import TagSection from '../components/TagSections';
 import AnnouncementSection from '../components/AnnouncementSection';
+import PostSection from '../components/PostSection';
 
 const HomePage = () => {
     const tags = [
@@ -28,6 +29,33 @@ const HomePage = () => {
         "Redux",
         "MERN Stack",
         "Responsive Design",
+      ];
+      const demoPosts = [
+        {
+          id: 1,
+          title: "Understanding React Hooks",
+          description:
+            "Learn about React hooks and how they can simplify your functional components.",
+          image: "https://via.placeholder.com/300x200",
+          date: "Jan 20, 2025",
+          author: "John Doe",
+        },
+        {
+          id: 2,
+          title: "Tailwind CSS Tips and Tricks",
+          description: "Discover useful tips for building responsive UIs with Tailwind CSS.",
+          image: "https://via.placeholder.com/300x200",
+          date: "Jan 18, 2025",
+          author: "Jane Smith",
+        },
+        {
+          id: 3,
+          title: "Top 10 JavaScript Frameworks",
+          description: "Explore the most popular JavaScript frameworks in 2025.",
+          image: "https://via.placeholder.com/300x200",
+          date: "Jan 15, 2025",
+          author: "Alice Johnson",
+        },
       ];
       const announcements = [
         {
@@ -62,6 +90,7 @@ const HomePage = () => {
         <BannerSection></BannerSection>
         <TagSection tags={tags} onTagClick={handleTagClick} />
         <AnnouncementSection announcements={announcements}></AnnouncementSection>
+        <PostSection posts={demoPosts}></PostSection>
         </div>
     );
 };
