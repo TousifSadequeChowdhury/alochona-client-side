@@ -3,6 +3,7 @@ import BannerSection from '../components/BannerSection';
 import TagSection from '../components/TagSections';
 import AnnouncementSection from '../components/AnnouncementSection';
 import PostSection from '../components/PostSection';
+import Posts from '../components/Posts';
 
 const HomePage = () => {
   const tags = [
@@ -98,7 +99,8 @@ const HomePage = () => {
         <BannerSection></BannerSection>
         <TagSection tags={tags} onTagClick={handleTagClick} />
         <AnnouncementSection announcements={announcements}></AnnouncementSection>
-        <PostSection posts={demoPosts}></PostSection>
+        <PostSection></PostSection>
+        <Posts></Posts>
         </div>
     );
 };
