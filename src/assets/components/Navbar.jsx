@@ -46,9 +46,15 @@ console.log(user)
           >
             Membership
           </a>
+          <a
+            href="/addpost"
+            className="text-lg hover:text-gray-300 transition duration-300 ease-in-out"
+          >
+            Add post
+          </a>
           <button className="relative">
             <span className="material-icons text-lg hover:text-gray-300 transition duration-300 ease-in-out">
-              notificationsc
+              notifications
             </span>
             {/* Notification Badge (if needed) */}
             <span className="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
