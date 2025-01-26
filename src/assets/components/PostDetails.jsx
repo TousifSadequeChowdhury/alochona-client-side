@@ -16,7 +16,7 @@ const PostDetails = () => {
     axios.get(`http://localhost:3000/api/posts/${postId}`)
       .then(response => {
         setPost(response.data.post); // Set post data in state
-        setComments(response.data.comments || []); // Set comments (if available) in state
+        setComments(response.data.post.comments || []); // Extract comments from the post
         setLoading(false); // Set loading state to false once data is fetched
       })
       .catch(error => {
@@ -29,14 +29,21 @@ const PostDetails = () => {
   // Handle adding a new comment
   const handleAddComment = () => {
     if (newComment.trim()) {
-      axios.post(`http://localhost:3000/api/posts/${postId}/comments`, { comment: newComment })
-        .then(response => {
-          setComments([...comments, response.data.comment]); // Update comments list
-          setNewComment(''); // Clear input field after adding comment
-        })
-        .catch(error => {
-          console.error('Error adding comment:', error);
-        });
+      axios.post(`http://localhost:3000/api/posts/${postId}/comments`, {
+        authorName: 'Anonymous', // Replace with logged-in user data if available
+        authorEmail: 'anonymous@example.com', // Replace with logged-in user data
+        text: newComment,
+      })
+      .then(response => {
+        setComments([...comments, response.data.comment]); // Update comments list
+        setNewComment(''); // Clear input field after adding comment
+      })
+      .catch(error => {
+        console.error('Error adding comment:', error);
+        alert('Failed to add comment. Please try again.');
+      });
+    } else {
+      alert('Comment cannot be empty.');
     }
   };
 
