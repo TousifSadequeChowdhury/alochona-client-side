@@ -37,17 +37,14 @@ const tags = [
   { value: 'Productivity', label: 'Productivity' },
 ];
 
-
 const AddPost = () => {
-  const {user}= useContext(AuthContext);
-  // const [authorImage, setAuthorImage] = useState('');
-  // const [authorName, setAuthorName] = useState('');
-  // const [authorEmail, setAuthorEmail] = useState('');
+  const { user } = useContext(AuthContext);
   const [postTitle, setPostTitle] = useState('');
   const [postDescription, setPostDescription] = useState('');
-  const [tag, setTag] = useState(null);
+  const [tagsSelected, setTagsSelected] = useState([]);
   const [upVote, setUpVote] = useState(0);
   const [downVote, setDownVote] = useState(0);
+
   const handleSubmit = (e) => {
     e.preventDefault();
   
@@ -62,9 +59,9 @@ const AddPost = () => {
     const authorName = user.displayName;
     const authorEmail = user.email;
   
-    if (!tag) {
+    if (tagsSelected.length === 0) {
       console.error('Tag is required');
-      alert('Please select a tag.');
+      alert('Please select at least one tag.');
       return;
     }
   
@@ -74,12 +71,10 @@ const AddPost = () => {
       authorEmail,
       postTitle,
       postDescription,
-      tag: tag.value, // Send only the value of the selected tag
+      tag: tagsSelected.map(tag => tag.value), 
       upVote,
       downVote,
     };
-  
-    // console.log(postData); // Debug log
   
     // Make API call
     axios.post('http://localhost:3000/api/posts', postData)
@@ -89,14 +84,12 @@ const AddPost = () => {
       .catch(error => {
         console.error('Error:', error); // Handle errors
       });
-     
   };
   
   return (
     <div className="max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-lg">
       <h2 className="text-2xl font-semibold text-gray-700 mb-6">Add a New Post</h2>
       <form onSubmit={handleSubmit} className="space-y-6">
-     
 
         {/* Post Title */}
         <div>
@@ -129,14 +122,15 @@ const AddPost = () => {
 
         {/* Tag Selection */}
         <div>
-          <label htmlFor="tag" className="block text-sm font-medium text-gray-600">
-            Tag
+          <label htmlFor="tags" className="block text-sm font-medium text-gray-600">
+            Tags
           </label>
           <Select
+            isMulti
             options={tags}
-            value={tag}
-            onChange={setTag}
-            placeholder="Select a tag"
+            value={tagsSelected}
+            onChange={setTagsSelected}
+            placeholder="Select tags"
             className="mt-2"
           />
         </div>

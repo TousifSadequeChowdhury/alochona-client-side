@@ -9,6 +9,7 @@ import Login from '../pages/Login';
 import Registration from '../pages/Registration';
 import AddPost from '../pages/AddPost';
 import MyPosts from '../pages/MyPosts';
+import PostDetails from '../components/PostDetails';
 
 const AppRoutes = () => {
     return (
@@ -21,6 +22,7 @@ const AppRoutes = () => {
                 <Route path='/register' element={<Registration></Registration>}/>
                 <Route path='/addpost' element={<AddPost></AddPost>}/>
                 <Route path='/myposts' element={<MyPosts></MyPosts>}/>
+                <Route path='/post/:postId' element={<PostDetails></PostDetails>}/>
 
             </Route>
         </Routes>

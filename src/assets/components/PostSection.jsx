@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router';  // Use 'react-router-dom' instead of 'react-router'
 
 const PostSection = ({ post }) => {
   if (!post) {
@@ -13,6 +14,8 @@ const PostSection = ({ post }) => {
     tag,
     upVote,
     downVote,
+    date,
+    _id, // Ensure _id is destructured here
   } = post;
 
   return (
@@ -25,11 +28,21 @@ const PostSection = ({ post }) => {
         />
         <div>
           <h3 className="text-lg font-semibold">{authorName}</h3>
-          <span className="bg-blue-500 text-white px-3 py-1 rounded-full text-sm">{tag}</span>
+          <div className="flex flex-wrap mt-2">
+            {tag.map((singleTag, index) => (
+              <span
+                key={index}
+                className="bg-blue-500 text-white px-3 py-1 rounded-full text-sm mr-2 mb-2"
+              >
+                {singleTag}
+              </span>
+            ))}
+          </div>
         </div>
       </div>
 
       <h2 className="text-xl font-bold text-gray-800 mt-4">{postTitle}</h2>
+      <p>{date}</p>
       <p className="text-gray-600 mt-2">{postDescription}</p>
 
       <div className="mt-4 flex">
@@ -39,6 +52,7 @@ const PostSection = ({ post }) => {
         <button className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600">
           {downVote} 👎
         </button>
+        <Link to={`/post/${_id}`}>View Post Details</Link>
       </div>
     </div>
   );

@@ -8,15 +8,14 @@ const Posts = () => {
   // Fetching posts using axios
   useEffect(() => {
     axios
-      .get('http://localhost:3000/api/posts') // Make sure this URL matches your backend endpoint
+      .get('http://localhost:3000/api/posts') 
       .then((response) => {
-        setPosts(response.data.posts); // Store the posts in state
-        console.log(posts)
+        setPosts(response.data.posts); 
       })
       .catch((error) => {
         console.error("Error fetching posts:", error);
       });
-  }, []); // The empty array ensures the effect runs once when the component mounts
+  }, []); 
 
   return (
     <div>
