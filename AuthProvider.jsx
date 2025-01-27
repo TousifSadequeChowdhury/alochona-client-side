@@ -1,68 +1,80 @@
 import { createContext, useEffect, useState } from "react";
-import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, signInWithPopup,createUserWithEmailAndPassword } from "firebase/auth";
-import { auth, googleProvider  } from './src/firebase.config'; // Import the correctly initialized auth from firebase.config.js
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged,
+  signInWithPopup,
+  createUserWithEmailAndPassword,
+} from "firebase/auth";
+import { auth, googleProvider } from "./src/firebase.config"; // Ensure auth is correctly initialized in firebase.config.js
 
 export const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
-    
-    const [user, setUser] = useState(null);
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true); // Add loading state to track auth state loading
 
-    // Function to create a new user
-    const registerUser = (email, password) => {
-        return createUserWithEmailAndPassword(auth, email, password);
-    };
+  // Function to create a new user
+  const registerUser = (email, password) => {
+    return createUserWithEmailAndPassword(auth, email, password);
+  };
 
-    // Function to log out
-    const logOut = () => {
-        return signOut(auth);
-    };
+  // Function to log out
+  const logOut = async () => {
+    try {
+      await signOut(auth);
+      console.log("User logged out");
+    } catch (error) {
+      console.error("Error logging out:", error);
+    }
+  };
 
-
-     // Log in with Google
+  // Log in with Google
   const googleLogin = () => {
     return signInWithPopup(auth, googleProvider)
       .then((result) => {
-        const user = result.user;
-        setUser(user); // Set the user after successful login
-        //  console.log(user.photoURL)
+        const loggedInUser = result.user;
+        setUser(loggedInUser); // Update user state
+        console.log("Logged in with Google:", loggedInUser);
       })
       .catch((error) => {
-        console.error(error);
+        console.error("Google login error:", error);
       });
   };
 
+  // Function to log in with email and password
+  const userLogin = (email, password) => {
+    return signInWithEmailAndPassword(auth, email, password);
+  };
 
-    // Function to log in
-    const userLogin = (email, password) => {
-        return signInWithEmailAndPassword(auth, email, password);
-    };
+  useEffect(() => {
+    // Subscribe to auth state changes
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+      setLoading(false); // Set loading to false once user state is determined
+    });
 
-    useEffect(() => {
-        // Subscribe to auth state changes
-        const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-            setUser(currentUser);
-        });
-        // Cleanup subscription on component unmount
-        return () => {
-            unsubscribe();
-        };
-    }, []);
+    // Cleanup subscription on component unmount
+    return () => unsubscribe();
+  }, []);
 
-    const authInfo = {
-        user,
-        setUser,
-        registerUser,
-        logOut,
-        userLogin,
-        googleLogin,
-    };
-// console.log(user)
-    return (
-        <AuthContext.Provider value={authInfo}>
-            {children}
-        </AuthContext.Provider>
-    );
+  // Provide authentication information and methods to context consumers
+  const authInfo = {
+    user,
+    setUser,
+    registerUser,
+    logOut,
+    userLogin,
+    googleLogin,
+  };
+
+  // Return children only after loading is complete
+  return (
+    <AuthContext.Provider value={authInfo}>
+      {!loading ? children : null} {/* Render children only after loading is complete */}
+    </AuthContext.Provider>
+  );
 };
 
 export default AuthProvider;

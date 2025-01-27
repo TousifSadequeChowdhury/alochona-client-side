@@ -5,11 +5,19 @@ import { AuthContext } from "../../../AuthProvider";
 
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [loggedIn, setLoggedIn] = useState(false); // Simulates user login state
-  const { user } = useContext(AuthContext);
-console.log(user)
+  const { user, logOut } = useContext(AuthContext); // Access user and logOut from AuthContext
+
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
+  const handleLogout = async () => {
+    try {
+      await logOut();
+      console.log("Logged out successfully");
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
   };
 
   return (
@@ -20,7 +28,7 @@ console.log(user)
           <span className="text-2xl font-bold">ALOCH🌎NA</span>
         </div>
 
-        {/* Mobile Menu Toggle for smaller screens */}
+        {/* Mobile Menu Toggle */}
         <button
           className="md:hidden text-slate-400"
           onClick={toggleMobileMenu}
@@ -50,36 +58,42 @@ console.log(user)
             href="/addpost"
             className="text-lg hover:text-gray-300 transition duration-300 ease-in-out"
           >
-            Add post
+            Add Post
           </a>
           <button className="relative">
-            <span className="material-icons text-lg hover:text-gray-300 transition duration-300 ease-in-out">
-              notifications
-            </span>
-            {/* Notification Badge (if needed) */}
+            <IoIosNotifications className="text-lg hover:text-gray-300 transition duration-300 ease-in-out" />
+            {/* Notification Badge */}
             <span className="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
               3
             </span>
           </button>
-          {loggedIn ? (
-            <img
-              src="https://via.placeholder.com/40"
-              alt="Profile"
-              className="w-10 h-10 rounded-full object-cover cursor-pointer"
-            />
+          {user ? (
+            <div className="flex items-center space-x-3">
+              <img
+                src={user.photoURL || "https://via.placeholder.com/40"}
+                alt={user.displayName || "User"}
+                className="w-10 h-10 rounded-full object-cover"
+              />
+              <span className="text-lg font-medium">      {user.displayName ? user.displayName.split(" ")[0] : "User"}
+              </span>
+              <button
+                onClick={handleLogout}
+                className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition duration-300 ease-in-out"
+              >
+                Logout
+              </button>
+            </div>
           ) : (
             <Link to="/login">
-            <a
-              className="bg-blue-500 text-white px-4 py-2 rounded block text-center hover:bg-blue-600 transition duration-300 ease-in-out"
-            >
-              Join Us
-            </a>
+              <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-300 ease-in-out">
+                Join Us
+              </button>
             </Link>
           )}
         </div>
       </div>
 
-      {/* Mobile Menu Links (Conditional Rendering) */}
+      {/* Mobile Menu Links */}
       {isMobileMenuOpen && (
         <div className="md:hidden bg-gray-800 p-4 space-y-4">
           <ul className="space-y-4">
@@ -98,23 +112,31 @@ console.log(user)
                 Notifications
               </a>
             </li>
-            {loggedIn ? (
-              <li>
-                <a href="/profile" className="text-white text-lg">
-                  Profile
-                </a>
-              </li>
+            {user ? (
+              <div className="space-y-2 text-center">
+                <img
+                  src={user.photoURL || "https://via.placeholder.com/40"}
+                  alt={user.displayName || "User"}
+                  className="w-16 h-16 mx-auto rounded-full object-cover"
+                />
+                <span className="block text-lg font-medium">
+                  {user.displayName || "User"}
+                </span>
+                <button
+                  onClick={handleLogout}
+                  className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition duration-300 ease-in-out w-full"
+                >
+                  Logout
+                </button>
+              </div>
             ) : (
               <li>
-                  <Link to="/login">
-                <a
-                  className="bg-blue-500 text-white px-4 py-2 rounded block text-center hover:bg-blue-600 transition duration-300 ease-in-out"
-                >
-                  Join Us
-                </a>
+                <Link to="/login">
+                  <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-300 ease-in-out w-full text-center">
+                    Join Us
+                  </button>
                 </Link>
               </li>
-
             )}
           </ul>
         </div>
