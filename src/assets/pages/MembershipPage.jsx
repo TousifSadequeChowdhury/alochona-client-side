@@ -40,7 +40,7 @@ const MembershipPage = ({ user, setUser }) => {
               onClick={handlePayment}
               disabled={isProcessing}
               className={`w-full py-2 px-4 text-white font-bold rounded ${
-                isProcessing ? "bg-gray-400 cursor-not-allowed" : "bg-blue-500 hover:bg-blue-600"
+                isProcessing ? "bg-gray-400 cursor-not-allowed" : "bg-indigo-800 hover:bg-indigo-600"
               } transition duration-300`}
             >
               {isProcessing ? "Processing..." : "Pay Now"}
@@ -52,7 +52,7 @@ const MembershipPage = ({ user, setUser }) => {
             <p className="text-gray-600 mb-6">Enjoy your exclusive benefits.</p>
             <button
               onClick={() => navigate("/")}
-              className="py-2 px-4 bg-blue-500 hover:bg-blue-600 text-white font-bold rounded transition duration-300"
+              className="py-2 px-4 bg-[#3F5E60] hover:bg-[#3F5E60] text-white font-bold rounded transition duration-300"
             >
               Go to Home
             </button>

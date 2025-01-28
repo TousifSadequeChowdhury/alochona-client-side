@@ -10,6 +10,7 @@ import Registration from '../pages/Registration';
 import AddPost from '../pages/AddPost';
 import MyPosts from '../pages/MyPosts';
 import PostDetails from '../components/PostDetails';
+import PrivateRoutes from './PrivateRoutes';
 
 const AppRoutes = () => {
     return (
@@ -20,10 +21,9 @@ const AppRoutes = () => {
                 <Route path='/membership' element={<MembershipPage></MembershipPage>}/>
                 <Route path='/login' element={<Login></Login>}/>
                 <Route path='/register' element={<Registration></Registration>}/>
-                <Route path='/addpost' element={<AddPost></AddPost>}/>
-                <Route path='/myposts' element={<MyPosts></MyPosts>}/>
-                <Route path='/post/:postId' element={<PostDetails></PostDetails>}/>
-
+                <Route path='/addpost' element={<PrivateRoutes><AddPost/></PrivateRoutes>}/>
+                <Route path='/myposts' element={<PrivateRoutes><MyPosts/></PrivateRoutes>}/>
+                <Route path='/post/:postId' element={<PrivateRoutes> <PostDetails/></PrivateRoutes>}/>
             </Route>
         </Routes>
   

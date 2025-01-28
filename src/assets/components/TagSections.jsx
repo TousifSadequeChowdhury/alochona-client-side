@@ -12,7 +12,7 @@ const TagSection = ({ tags, onTagClick }) => {
             <button
               key={index}
               onClick={() => onTagClick(tag)}
-              className="bg-blue-500 text-white px-4 py-2 rounded-lg shadow-sm hover:bg-blue-600 transition duration-300"
+              className="bg-indigo-800 text-white px-4 py-2 rounded-lg shadow-sm hover:bg-indigo-300 transition duration-300"
             >
               {tag}
             </button>

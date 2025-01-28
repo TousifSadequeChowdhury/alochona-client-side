@@ -1,42 +1,49 @@
 import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import { useParams } from 'react-router';
+import { FaThumbsUp, FaThumbsDown, FaComment, FaRegClock } from 'react-icons/fa';
+import { AuthContext } from '../../../AuthProvider'; // Adjust import path
 
 const PostDetails = () => {
-  const { postId } = useParams(); // Get the postId from the URL
-  const [post, setPost] = useState(null); // State to store post data
-  const [comments, setComments] = useState([]); // State to store comments
-  const [loading, setLoading] = useState(true); // State to handle loading state
-  const [error, setError] = useState(null); // State to handle errors
-  const [newComment, setNewComment] = useState(''); // State for the new comment input
+  const { postId } = useParams();
+  const { user } = useContext(AuthContext);
+  const [post, setPost] = useState(null);
+  const [comments, setComments] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [newComment, setNewComment] = useState('');
 
-  // Fetch post details using the postId
   useEffect(() => {
-    setLoading(true); // Set loading state before fetching
-    axios.get(`http://localhost:3000/api/posts/${postId}`)
+    setLoading(true);
+    axios.get(`https://alochona-server.vercel.app/api/posts/${postId}`)
       .then(response => {
-        setPost(response.data.post); // Set post data in state
-        setComments(response.data.post.comments || []); // Extract comments from the post
-        setLoading(false); // Set loading state to false once data is fetched
+        setPost(response.data.post);
+        setComments(response.data.post.comments || []);
+        setLoading(false);
       })
       .catch(error => {
         console.error('Error fetching post details:', error);
-        setError('Error fetching post details'); // Set error state
-        setLoading(false); // Set loading state to false on error
+        setError('Error fetching post details');
+        setLoading(false);
       });
   }, [postId]);
 
-  // Handle adding a new comment
   const handleAddComment = () => {
+    if (!user) {
+      alert('Please login to comment');
+      return;
+    }
+
     if (newComment.trim()) {
-      axios.post(`http://localhost:3000/api/posts/${postId}/comments`, {
-        authorName: 'Anonymous', // Replace with logged-in user data if available
-        authorEmail: 'anonymous@example.com', // Replace with logged-in user data
+      axios.post(`https://alochona-server.vercel.app/api/posts/${postId}/comments`, {
+        authorName: user.displayName || 'Anonymous',
+        authorEmail: user.email || 'no-email@example.com',
+        authorImage: user.photoURL || '',
         text: newComment,
       })
       .then(response => {
-        setComments([...comments, response.data.comment]); // Update comments list
-        setNewComment(''); // Clear input field after adding comment
+        setComments([...comments, response.data.comment]);
+        setNewComment('');
       })
       .catch(error => {
         console.error('Error adding comment:', error);
@@ -47,50 +54,153 @@ const PostDetails = () => {
     }
   };
 
+  // User avatar component
+  const UserAvatar = ({ author }) => (
+    <div className="flex-shrink-0">
+      {author?.authorImage ? (
+        <img
+          src={author.authorImage}
+          alt={author.authorName}
+          className="w-10 h-10 rounded-full border-2 border-white"
+        />
+      ) : (
+        <div className="w-10 h-10 rounded-full bg-indigo-500 flex items-center justify-center text-white font-semibold">
+          {author?.authorName?.[0] || 'U'}
+        </div>
+      )}
+    </div>
+  );
+
   return (
-    <div className="max-w-4xl mx-auto p-4">
-      {loading && <div className="text-center text-xl text-gray-500">Loading...</div>}
-      {error && <div className="text-center text-xl text-red-500">{error}</div>}
+    <div className="max-w-3xl mx-auto p-4">
+      {loading && (
+        <div className="text-center py-8 text-gray-500">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto"></div>
+        </div>
+      )}
+      
+      {error && (
+        <div className="text-center text-red-500 bg-red-50 p-4 rounded-lg mb-6">
+          {error}
+        </div>
+      )}
 
       {post && (
-        <div className="bg-white shadow-lg rounded-lg p-6 mb-6">
-          <h1 className="text-3xl font-semibold text-gray-900">{post.postTitle}</h1>
-          <p className="text-lg text-gray-600 mt-2">By <span className="font-semibold">{post.authorName}</span> | {post.authorEmail}</p>
-          <p className="text-gray-800 mt-4">{post.postDescription}</p>
-          
-          <div className="flex space-x-4 mt-6">
-            <span className="text-green-600 font-semibold">Upvotes: {post.upVote}</span>
-            <span className="text-red-600 font-semibold">Downvotes: {post.downVote}</span>
+        <div className="bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow duration-200 p-6 mb-8">
+          {/* Post Header */}
+          <div className="flex items-start mb-6">
+            <UserAvatar author={post} />
+            <div className="flex-1 ml-4">
+              <div className="flex items-baseline justify-between">
+                <div>
+                  <h2 className="text-2xl font-bold text-gray-900">{post.postTitle}</h2>
+                  <p className="text-gray-600 mt-1">
+                    by <span className="font-semibold text-indigo-600">{post.authorName}</span>
+                  </p>
+                </div>
+                <span className="text-sm text-gray-500 flex items-center">
+                  <FaRegClock className="mr-1" />
+                  {new Date(post.date).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                  })}
+                </span>
+              </div>
+              
+              <div className="flex flex-wrap gap-2 mt-3">
+                {post.tag?.map((tag, index) => (
+                  <span
+                    key={index}
+                    className="bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-sm"
+                  >
+                    #{tag}
+                  </span>
+                ))}
+              </div>
+            </div>
           </div>
-          
-          <div className="mt-8">
-            <h3 className="text-2xl font-semibold text-gray-900 mb-4">Comments</h3>
-            
+
+          {/* Post Content */}
+          <div className="prose max-w-none mb-8 text-gray-700">
+            {post.postDescription}
+          </div>
+
+          {/* Post Stats */}
+          <div className="flex items-center space-x-6 text-gray-600 border-t border-b py-4 mb-8">
+            <div className="flex items-center space-x-2">
+              <FaThumbsUp className="text-green-600" />
+              <span className="font-medium">{post.upVote}</span>
+            </div>
+            <div className="flex items-center space-x-2">
+              <FaThumbsDown className="text-red-600" />
+              <span className="font-medium">{post.downVote}</span>
+            </div>
+            <div className="flex items-center space-x-2">
+              <FaComment className="text-indigo-600" />
+              <span className="font-medium">{comments.length} comments</span>
+            </div>
+          </div>
+
+          {/* Comments Section */}
+          <div className="space-y-6">
+            <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center">
+              <FaComment className="mr-2 text-indigo-600" />
+              Comments
+            </h3>
+
             {comments.length === 0 ? (
-              <p className="text-gray-500">No comments yet.</p>
+              <div className="text-center text-gray-500 py-6">
+                No comments yet. Be the first to share your thoughts!
+              </div>
             ) : (
               comments.map((comment, index) => (
-                <div key={index} className="border-b pb-4 mb-4">
-                  <p className="font-semibold text-gray-800">{comment.authorName}</p>
-                  <p className="text-gray-600">{comment.text}</p>
+                <div key={index} className="bg-gray-50 rounded-lg p-4">
+                  <div className="flex items-start">
+                    <UserAvatar author={comment} />
+                    <div className="flex-1 ml-4">
+                      <div className="flex items-baseline justify-between">
+                        <h4 className="font-semibold text-gray-900">{comment.authorName}</h4>
+                        {/* <span className="text-sm text-gray-500">
+                          {new Date(comment.createdAt).toLocaleDateString()}
+                        </span> */}
+                      </div>
+                      <p className="text-gray-700 mt-1">{comment.text}</p>
+                    </div>
+                  </div>
                 </div>
               ))
             )}
-            
-            <div className="mt-6">
-              <textarea 
-                value={newComment}
-                onChange={(e) => setNewComment(e.target.value)}
-                placeholder="Add a comment..."
-                rows="4"
-                className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              />
-              <button 
-                onClick={handleAddComment} 
-                className="mt-4 px-6 py-2 bg-indigo-600 text-white font-semibold rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              >
-                Post Comment
-              </button>
+
+            {/* Add Comment Section */}
+            <div className="mt-8">
+              {user ? (
+                <>
+                  <textarea
+                    value={newComment}
+                    onChange={(e) => setNewComment(e.target.value)}
+                    placeholder="Write your comment..."
+                    rows="4"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+                  />
+                  <button
+                    onClick={handleAddComment}
+                    className="mt-4 px-6 py-2 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 transition-colors flex items-center"
+                  >
+                    Post Comment
+                    <FaComment className="ml-2" />
+                  </button>
+                </>
+              ) : (
+                <div className="text-center py-4">
+                  <Link
+                    to="/login"
+                    className="text-indigo-600 hover:text-indigo-800 font-medium"
+                  >
+                    Login to comment
+                  </Link>
+                </div>
+              )}
             </div>
           </div>
         </div>

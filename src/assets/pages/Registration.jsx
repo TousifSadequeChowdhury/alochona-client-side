@@ -90,7 +90,7 @@ const Registration = () => {
           {/* Submit Button */}
           <button
             type="submit"
-            className="w-full p-3 bg-[#3D405B] text-white rounded-md hover:bg-[#343750] focus:outline-none"
+            className="w-full p-3 bg-indigo-800 text-white rounded-md hover:bg-indigo-700 focus:outline-none"
           >
             Register
           </button>

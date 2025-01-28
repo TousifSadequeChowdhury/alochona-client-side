@@ -44,6 +44,7 @@ const AddPost = () => {
   const [tagsSelected, setTagsSelected] = useState([]);
   const [upVote, setUpVote] = useState(0);
   const [downVote, setDownVote] = useState(0);
+  const [loading, setLoading] = useState(true);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -77,12 +78,14 @@ const AddPost = () => {
     };
   
     // Make API call
-    axios.post('http://localhost:3000/api/posts', postData)
+    axios.post('https://alochona-server.vercel.app/api/posts', postData)
       .then(response => {
         console.log(response.data); // Handle the response
       })
       .catch(error => {
         console.error('Error:', error); // Handle errors
+      }).finally(() => {
+        setLoading(false); // Ensure loading is stopped in any case
       });
   };
   
@@ -170,7 +173,7 @@ const AddPost = () => {
         <div>
           <button
             type="submit"
-            className="w-full py-2 px-4 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-600 transition duration-200"
+            className="w-full py-2 px-4 bg-indigo-800 text-white font-semibold rounded-md hover:bg-[#3F5E60] transition duration-200"
           >
             Submit Post
           </button>

@@ -1,4 +1,5 @@
 import React from "react";
+import { FaUserCircle } from "react-icons/fa"; // Import the icon
 
 const AnnouncementSection = ({ announcements }) => {
   return (
@@ -12,17 +13,14 @@ const AnnouncementSection = ({ announcements }) => {
               className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition duration-300"
             >
               <div className="flex items-center mb-4">
-                <img
-                  src={announcement.authorImage}
-                  alt="Author"
-                  className="w-12 h-12 rounded-full mr-4"
-                />
+                {/* Replace the img tag with the React icon */}
+                <FaUserCircle className="w-12 h-12 text-gray-400 mr-4" />
                 <div>
                   <h3 className="text-lg font-semibold text-gray-800">{announcement.authorName}</h3>
                   <p className="text-sm text-gray-500">{announcement.date}</p>
                 </div>
               </div>
-              <h4 className="text-xl font-semibold text-blue-500 mb-2">{announcement.title}</h4>
+              <h4 className="text-xl font-semibold text-indigo-800 mb-2">{announcement.title}</h4>
               <p className="text-gray-700">{announcement.description}</p>
             </div>
           ))}

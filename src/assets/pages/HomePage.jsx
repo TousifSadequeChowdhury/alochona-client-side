@@ -99,7 +99,6 @@ const HomePage = () => {
         <BannerSection></BannerSection>
         <TagSection tags={tags} onTagClick={handleTagClick} />
         <AnnouncementSection announcements={announcements}></AnnouncementSection>
-        <PostSection></PostSection>
         <Posts></Posts>
         </div>
     );

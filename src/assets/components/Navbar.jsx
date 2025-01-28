@@ -1,6 +1,5 @@
 import React, { useContext, useState } from "react";
 import { Link } from "react-router";
-import { IoIosNotifications } from "react-icons/io";
 import { AuthContext } from "../../../AuthProvider";
 
 const Navbar = () => {
@@ -21,7 +20,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-gray-700 text-white shadow-md">
+    <nav className="bg-indigo-700 text-white shadow-md">
       <div className="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
         {/* Logo Section */}
         <div className="flex items-center">
@@ -60,13 +59,13 @@ const Navbar = () => {
           >
             Add Post
           </a>
-          <button className="relative">
-            <IoIosNotifications className="text-lg hover:text-gray-300 transition duration-300 ease-in-out" />
-            {/* Notification Badge */}
-            <span className="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
-              3
-            </span>
-          </button>
+          <a
+            href="/myposts"
+            className="text-lg hover:text-gray-300 transition duration-300 ease-in-out"
+          >
+            My Post
+          </a>
+        
           {user ? (
             <div className="flex items-center space-x-3">
               <img
@@ -85,7 +84,7 @@ const Navbar = () => {
             </div>
           ) : (
             <Link to="/login">
-              <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-300 ease-in-out">
+              <button className="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-500 transition duration-300 ease-in-out">
                 Join Us
               </button>
             </Link>
@@ -108,10 +107,16 @@ const Navbar = () => {
               </a>
             </li>
             <li>
-              <a href="/notifications" className="text-white text-lg">
-                Notifications
+              <a href="/addpost" className="text-white text-lg">
+                Add Post
               </a>
             </li>
+            <li>
+              <a href="/myposts" className="text-white text-lg">
+                My Post
+              </a>
+            </li>
+         
             {user ? (
               <div className="space-y-2 text-center">
                 <img
@@ -132,7 +137,7 @@ const Navbar = () => {
             ) : (
               <li>
                 <Link to="/login">
-                  <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-300 ease-in-out w-full text-center">
+                  <button className="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-500 transition duration-300 ease-in-out w-full text-center">
                     Join Us
                   </button>
                 </Link>
