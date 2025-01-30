@@ -2,6 +2,10 @@ import React, { useContext, useState } from 'react';
 import Select from 'react-select';
 import axios from 'axios';
 import { AuthContext } from '../../../AuthProvider';
+import { FaRobot } from 'react-icons/fa'; 
+import { ClipLoader } from 'react-spinners'; 
+import { toast, ToastContainer } from 'react-toastify'; 
+import 'react-toastify/dist/ReactToastify.css'; 
 
 // Define available tags
 const tags = [
@@ -44,21 +48,38 @@ const AddPost = () => {
   const [tagsSelected, setTagsSelected] = useState([]);
   const [upVote, setUpVote] = useState(0);
   const [downVote, setDownVote] = useState(0);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false); // State for loading
+
+  const handleGenerate = async () => {
+    if (tagsSelected.length === 0) {
+      alert('Please select at least one tag.');
+      return;
+    }
+
+    setLoading(true); // Start loading
+
+    try {
+      const response = await axios.get('http://localhost:3000/testai', {
+        params: { prompt: tagsSelected.map(tag => tag.value).join(", ") },
+      });
+      setPostTitle(response.data.title);
+      setPostDescription(response.data.description);
+    } catch (error) {
+      console.error('Error generating content:', error);
+      alert('Failed to generate content.');
+    } finally {
+      setLoading(false); // Stop loading
+    }
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
   
-    // Check if user is logged in and contains required fields
     if (!user || !user.photoURL || !user.displayName || !user.email) {
       console.error('User data is missing');
       alert('User data is missing. Please log in properly.');
       return;
     }
-  
-    const authorImage = user.photoURL;
-    const authorName = user.displayName;
-    const authorEmail = user.email;
   
     if (tagsSelected.length === 0) {
       console.error('Tag is required');
@@ -67,9 +88,9 @@ const AddPost = () => {
     }
   
     const postData = {
-      authorImage,
-      authorName,
-      authorEmail,
+      authorImage: user.photoURL,
+      authorName: user.displayName,
+      authorEmail: user.email,
       postTitle,
       postDescription,
       tag: tagsSelected.map(tag => tag.value), 
@@ -77,24 +98,24 @@ const AddPost = () => {
       downVote,
     };
   
-    // Make API call
+ 
     axios.post('https://alochona-server.vercel.app/api/posts', postData)
       .then(response => {
-        console.log(response.data); // Handle the response
+        console.log(response.data);
+        toast.success('Post submitted successfully!'); // Success toast
       })
       .catch(error => {
-        console.error('Error:', error); // Handle errors
+        console.error('Error:', error);
+        toast.error('Failed to submit post. Please try again.'); // Error toast
       }).finally(() => {
-        setLoading(false); // Ensure loading is stopped in any case
+        setLoading(false); // Stop loading
       });
   };
   
   return (
-    <div className="max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-lg">
+    <div className="max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-lg mt-7" >
       <h2 className="text-2xl font-semibold text-gray-700 mb-6">Add a New Post</h2>
       <form onSubmit={handleSubmit} className="space-y-6">
-
-        {/* Post Title */}
         <div>
           <label htmlFor="postTitle" className="block text-sm font-medium text-gray-600">
             Post Title
@@ -108,8 +129,6 @@ const AddPost = () => {
             className="mt-2 p-2 bg-gray-50 border border-gray-300 rounded-md w-full"
           />
         </div>
-
-        {/* Post Description */}
         <div>
           <label htmlFor="postDescription" className="block text-sm font-medium text-gray-600">
             Post Description
@@ -122,8 +141,6 @@ const AddPost = () => {
             className="mt-2 p-2 bg-gray-50 border border-gray-300 rounded-md w-full"
           />
         </div>
-
-        {/* Tag Selection */}
         <div>
           <label htmlFor="tags" className="block text-sm font-medium text-gray-600">
             Tags
@@ -137,48 +154,32 @@ const AddPost = () => {
             className="mt-2"
           />
         </div>
-
-        {/* UpVote and DownVote */}
-        <div className="flex space-x-6">
-          <div className="w-1/2">
-            <label htmlFor="upVote" className="block text-sm font-medium text-gray-600">
-              UpVote
-            </label>
-            <input
-              type="number"
-              id="upVote"
-              value={upVote}
-              onChange={(e) => setUpVote(Number(e.target.value))}
-              min="0"
-              className="mt-2 p-2 bg-gray-50 border border-gray-300 rounded-md w-full"
-            />
-          </div>
-
-          <div className="w-1/2">
-            <label htmlFor="downVote" className="block text-sm font-medium text-gray-600">
-              DownVote
-            </label>
-            <input
-              type="number"
-              id="downVote"
-              value={downVote}
-              onChange={(e) => setDownVote(Number(e.target.value))}
-              min="0"
-              className="mt-2 p-2 bg-gray-50 border border-gray-300 rounded-md w-full"
-            />
-          </div>
-        </div>
-
-        {/* Submit Button */}
-        <div>
-          <button
-            type="submit"
-            className="w-full py-2 px-4 bg-indigo-800 text-white font-semibold rounded-md hover:bg-[#3F5E60] transition duration-200"
-          >
-            Submit Post
-          </button>
-        </div>
+        <button
+          type="button"
+          onClick={handleGenerate}
+          disabled={loading} 
+          className="w-full py-2 px-4 bg-gradient-to-r from-indigo-700 to-purple-600 text-white font-semibold rounded-md hover:from-blue-600 hover:to-purple-700 transition duration-200 flex items-center justify-center"
+        >
+          {loading ? (
+            <>
+              <ClipLoader color="#ffffff" size={20} className="mr-2" /> {/* Spinner */}
+              Generating...
+            </>
+          ) : (
+            <>
+              <FaRobot className="mr-2" /> 
+              Generate Post
+            </>
+          )}
+        </button>
+        <button
+          type="submit"
+          className="w-full py-2 px-4 bg-indigo-800 text-white font-semibold rounded-md hover:bg-indigo-600 transition duration-200"
+        >
+          Submit Post
+        </button>
       </form>
+      <ToastContainer /> {/* Toast container */}
     </div>
   );
 };
