@@ -29,7 +29,7 @@ const PostSection = ({ post, userId }) => {
     if (isDisabled) return;
 
     try {
-      const response = await fetch(`http://localhost:3000/api/posts/${_id}/vote`, {
+      const response = await fetch(`https://alochona-server.vercel.app/api/posts/${_id}/vote`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ type, userId }),

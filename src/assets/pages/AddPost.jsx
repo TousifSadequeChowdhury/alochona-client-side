@@ -48,18 +48,17 @@ const AddPost = () => {
   const [tagsSelected, setTagsSelected] = useState([]);
   const [upVote, setUpVote] = useState(0);
   const [downVote, setDownVote] = useState(0);
-  const [loading, setLoading] = useState(false); // State for loading
-
+  const [loading, setLoading] = useState(false); 
   const handleGenerate = async () => {
     if (tagsSelected.length === 0) {
       alert('Please select at least one tag.');
       return;
     }
 
-    setLoading(true); // Start loading
+    setLoading(true); 
 
     try {
-      const response = await axios.get('http://localhost:3000/testai', {
+      const response = await axios.get('https://alochona-server.vercel.app/ai', {
         params: { prompt: tagsSelected.map(tag => tag.value).join(", ") },
       });
       setPostTitle(response.data.title);
