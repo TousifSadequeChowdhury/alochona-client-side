@@ -3,6 +3,7 @@ import { Link } from "react-router";
 import { AuthContext } from "../../../AuthProvider";
 
 const Navbar = () => {
+
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { user, logOut } = useContext(AuthContext); // Access user and logOut from AuthContext
 
