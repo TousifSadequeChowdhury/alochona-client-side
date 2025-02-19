@@ -106,8 +106,11 @@ const MyPosts = () => {
 
               {/* Post Content */}
               <div className="p-6">
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">{post.postTitle}</h3>
-                <p className="text-gray-600 line-clamp-3 mb-4">{post.postDescription}</p>
+                {/* Fixed Title Height */}
+                <h3 className="text-xl font-semibold text-gray-900 mb-3 h-16 overflow-hidden">{post.postTitle}</h3>
+
+                {/* Fixed Description Height */}
+                <p className="text-gray-600 line-clamp-3 mb-4 h-24 overflow-hidden">{post.postDescription}</p>
 
                 {/* Tags */}
                 <div className="flex flex-wrap gap-2 mb-6">
