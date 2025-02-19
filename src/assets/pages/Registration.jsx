@@ -1,10 +1,11 @@
 import React, { useContext } from 'react';
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';  // Import useNavigate
 import { AuthContext } from '../../../AuthProvider';
 import { updateProfile } from "firebase/auth";
 
 const Registration = () => {
   const { registerUser, setUser, googleLogin } = useContext(AuthContext);
+  const navigate = useNavigate();  // Initialize the navigate function
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -36,13 +37,14 @@ const Registration = () => {
     try {
       await googleLogin();
       console.log("Logged in with Google successfully!");
+      navigate('/');  // Redirect to the home page after successful login
     } catch (error) {
       console.error("Google login error:", error.message);
     }
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100 ">
+    <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="bg-white p-8 rounded-lg shadow-lg w-96">
         <h2 className="text-2xl font-semibold text-center text-gray-800 mb-6">
           Register
