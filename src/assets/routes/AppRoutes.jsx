@@ -1,7 +1,5 @@
 import React from 'react';
 import { Route, Router, Routes } from 'react-router';
-import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
 import MainLayout from '../Layout/MainLayout';
 import HomePage from '../pages/HomePage';
 import MembershipPage from '../pages/MembershipPage';
@@ -11,6 +9,7 @@ import AddPost from '../pages/AddPost';
 import MyPosts from '../pages/MyPosts';
 import PostDetails from '../components/PostDetails';
 import PrivateRoutes from './PrivateRoutes';
+import Error from '../pages/Error';
 
 const AppRoutes = () => {
     return (
@@ -24,6 +23,7 @@ const AppRoutes = () => {
                 <Route path='/addpost' element={<PrivateRoutes><AddPost/></PrivateRoutes>}/>
                 <Route path='/myposts' element={<PrivateRoutes><MyPosts/></PrivateRoutes>}/>
                 <Route path='/post/:postId' element={<PrivateRoutes> <PostDetails/></PrivateRoutes>}/>
+                <Route path='*' element={<Error></Error>}/>
             </Route>
         </Routes>
   
